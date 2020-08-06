@@ -1,0 +1,165 @@
+import javax.swing.JFrame;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+public class OrderRecord extends JFrame implements ActionListener{
+   
+   private JButton calc, submit;
+   
+   JPanel northPanel = new JPanel();
+   JPanel westPanel = new JPanel();
+   JPanel centerPanel = new JPanel();
+   JPanel eastPanel = new JPanel();
+
+   JLabel Total = new JLabel("Price");
+   JLabel Rating = new JLabel("Rating");
+   JLabel end = new JLabel("Please give a rating.");
+   
+   JTextField TotalResult = new JTextField(8);
+   
+   JRadioButton burger = new JRadioButton("Burger");
+   JRadioButton sp = new JRadioButton("Spagetti");
+   JRadioButton fc = new JRadioButton("Fried Chicken");
+   JRadioButton rate1 = new JRadioButton("1");
+   JRadioButton rate2 = new JRadioButton("2");
+   JRadioButton rate3 = new JRadioButton("3");
+   
+   JCheckBox coffee = new JCheckBox ("Coffee");
+   JCheckBox tea = new JCheckBox ("Tea");
+   JCheckBox mt_dew = new JCheckBox ("Mountain Dew");
+   JCheckBox pepsi= new JCheckBox ("Pepsi");
+   
+   //variable for calculate
+   double foodCost = 0;
+   double DrinkCost = 0;
+   double TotalCost = 0;
+
+   public OrderRecord(){
+
+       northPanel.setLayout(new GridLayout());
+       northPanel.setBorder(new TitledBorder("Food:"));
+      
+      calc = new JButton("Calculate");
+      submit = new JButton("Submit");
+      
+      ButtonGroup food = new ButtonGroup();
+      food.add(burger);
+      food.add(sp);
+      food.add(fc);
+      //register listeners
+      burger.addActionListener(this);
+      sp.addActionListener(this);
+      fc.addActionListener(this);
+      calc.addActionListener(this);
+      submit.addActionListener(this);
+      
+      northPanel.add(burger);
+      northPanel.add(sp);
+      northPanel.add(fc);
+      
+      westPanel.setLayout(new GridLayout(4, 3, 5, 5));
+      westPanel.setBorder(new TitledBorder("Drinks:"));
+      westPanel.add(coffee);
+      westPanel.add(tea);
+      westPanel.add(mt_dew);
+      westPanel.add(pepsi);
+      westPanel.add(calc);
+      
+      centerPanel.setLayout(new GridLayout(4,2));
+      centerPanel.add(Total);
+      centerPanel.add(TotalResult);
+      centerPanel.add(end);
+      
+      eastPanel.setLayout(new GridLayout(6,2));
+      eastPanel.add(Rating);
+      eastPanel.add(rate1);
+      eastPanel.add(rate2);
+      eastPanel.add(rate3);
+      eastPanel.add(submit);
+      
+      setLayout(new BorderLayout());
+      add(northPanel, BorderLayout.NORTH);
+      add(westPanel, BorderLayout.WEST);
+      add(centerPanel, BorderLayout.CENTER);
+      add(eastPanel, BorderLayout.EAST);
+      
+    }
+    
+    public double Burger() 
+    {
+        return foodCost = 2.50;
+    }
+    public double Spaghetti() 
+    {
+        return foodCost = 5.00;
+    }
+    public double FriedChicken() 
+    {
+       return foodCost = 3.00;
+    }
+    public double setDrinkCost()
+    {    
+        if ( coffee.isSelected())
+            DrinkCost = 1.80;
+            
+        else if ( tea.isSelected())
+            DrinkCost = 1.80;
+            
+        else if (mt_dew.isSelected())
+            DrinkCost = 2.00;
+            
+        else if (pepsi.isSelected())
+            DrinkCost = 2.00;
+            
+        return DrinkCost;
+    }
+    
+    public void calculate(double foodCost, double DrinkCost) 
+    {
+    
+       TotalCost = foodCost + DrinkCost;
+        TotalResult.setText(String.valueOf(TotalCost));
+        
+    }
+
+    public void actionPerformed(ActionEvent e) 
+    {
+       if (e.getSource() == burger)
+            Burger();
+        else if (e.getSource() == sp)
+            Spaghetti();
+        else if (e.getSource() == fc)
+            FriedChicken();
+       setDrinkCost();
+         if (e.getSource() == calc)
+                calculate(foodCost, DrinkCost);
+              if(e.getSource() == submit)
+                 end.setText("Thank you for coming!");
+    }
+    
+   
+   public static void main (String[] args)
+   {
+      OrderRecord order = new OrderRecord();
+        // set window title
+      order.setTitle("Order Record");
+        // set window location
+      order.setLocationRelativeTo(null);
+        // specify window location
+      order.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // set window size
+      order.setSize(500, 300);
+        // display window
+      order.setVisible(true);
+    }
+      
+      
+}
+  
+      
+ 
+
+
