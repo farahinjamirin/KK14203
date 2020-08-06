@@ -1,0 +1,246 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.util.ArrayList;
+
+abstract class Cake {
+String n;
+String [] topping;
+String [] toppingselection;
+double pricesmall;
+double pricemedium;
+double pricebig;
+double totalprice; 
+int size;
+double sizeprice;
+String sizetype;
+int quantity;
+
+Cake (String cakeName){
+n = cakeName ; 
+}
+
+String getCake () {
+return n;
+}
+
+String [] getTopping () {
+return topping ;
+}
+
+String [] getToppingselection () {
+return toppingselection;
+}
+
+double getPriceSmall () {
+return pricesmall;
+}
+
+double getPriceMedium () {
+return pricemedium;
+}
+
+double getPriceBig () {
+return pricebig;
+}
+
+int getquantity () {
+return quantity;
+}
+
+abstract void setCake (String[] t, double s, double m, double b);
+
+void orderCake (String[] toppingselection, int quantity, int size) {
+this.toppingselection = toppingselection;
+this.quantity=quantity;
+this.size=size;
+}
+
+double getsizeprice (int size, double pricesmall, double pricemedium, double pricebig) {
+if(size==1){
+sizeprice = pricesmall;
+}
+else if (size==2){
+sizeprice = pricemedium;
+}
+else if(size==3){
+sizeprice = pricebig;
+}
+return sizeprice;
+}
+
+double gettotalprice () {
+double totalprice = getsizeprice(size,pricesmall,pricemedium,pricebig) * quantity + (toppingselection.length*10);
+return totalprice;
+}
+
+String getsize (int size){
+if(size==1) {
+sizetype = "Small" ;
+}
+if(size==2) {
+sizetype = "Medium";
+}
+if(size==3) {
+sizetype = "Big";
+}
+return sizetype;
+}
+
+void printCake () {
+System.out.println ("----------------------------------");
+System.out.println("             Cake Menu             ");
+System.out.println("-----------------------------------");
+System.out.println( n + " with available toppings : " );
+int i = 0;
+while (i < topping.length ) {
+System.out.println((i+1)+")"+topping[i]);
+i++;
+}
+System.out.println("\nPrice : ");
+System.out.println( "[1] Small   :  RM " +getPriceSmall());
+System.out.println( "[1] Medium   : RM " +getPriceMedium());
+System.out.println( "[1] Big   :  RM  " +getPriceBig());
+}
+
+void printOrder () {
+System.out.println("\nCake Order Detail : " ) ;
+System.out.println("-------------------------------");
+System.out.print("Topping : ");
+  int i = 0;
+  while (i<toppingselection.length) {
+  System.out.print ((i+1)+")"+toppingselection[i]+ " ");
+  i++;
+  }
+System.out.println("\nSize : " + getsize (size));
+System.out.println("---------------------------------");
+System.out.println("Total Price : RM " +gettotalprice());
+}
+
+public String printOrder_GUI(){
+      String txt = "\n\nCake Order detail:\n";
+      txt += "-------------------------------------------\n";
+      txt += "Topping : \n";
+      for(int i=0; i<toppingselection.length; i++){
+         txt += "(" + (i+1) + ") " + toppingselection[i] + " \n";
+      } 
+      txt += "\nSize        : " + getsize(size) + "\n";
+      txt += "Quantity : " + getquantity() + "\n";
+      txt += "-------------------------------------------\n";
+      txt += "Total Price: RM" + gettotalprice() + "\n"; 
+      txt += "-------------------------------------------\n"; 
+      return txt;
+}
+}
+
+class BlackForest extends Cake { 
+
+BlackForest (String n) {
+super (n);
+}
+
+ void setCake (String[] x, double s, double m, double b) {
+ topping = x;
+ pricesmall = s;
+ pricemedium = m;
+ pricebig = b;
+}
+}
+
+public class CakeApp_Lab6 extends JPanel implements ActionListener{
+    private JLabel menu;
+    private JLabel top;
+    private JButton btnAdd;
+    private JTextArea jt1;
+    private JComboBox jcb;
+    private JButton btnOrder;
+    private static Cake cake;
+    private static ArrayList<String> order;
+
+    public CakeApp_Lab6() {
+        //construct preComponents
+        String[] jcbItems = {"[Select]"};
+
+        //construct components
+        menu = new JLabel ("Cake Menu");
+        top = new JLabel ("Toppings Selection");
+        btnAdd = new JButton ("Add Topping");
+        jt1 = new JTextArea (5, 5);
+        JScrollPane jt1_sp = new JScrollPane(jt1);
+        jcb = new JComboBox (jcbItems);
+        btnOrder = new JButton ("Order");
+        
+        btnAdd.addActionListener(this);
+        btnOrder.addActionListener(this);
+
+        //adjust size and set layout
+        setPreferredSize (new Dimension (514, 325));
+        setLayout (null);
+
+        //add components
+        add (menu);
+        add (top);
+        add (btnAdd);
+        add (jt1_sp);
+        add (jcb);
+        add (btnOrder);
+
+        //set component bounds (only needed by Absolute Positioning)
+        menu.setBounds (195, 10, 100, 25);
+        top.setBounds (25, 55, 125, 25);
+        btnAdd.setBounds (365, 55, 125, 25);
+        jt1_sp.setBounds (25, 120, 465, 180);
+        jcb.setBounds (180, 55, 180, 25);
+        btnOrder.setBounds (365, 90, 125, 25);
+    }
+    
+   public void actionPerformed(ActionEvent ae){
+      String command = ae.getActionCommand(); 
+      
+      if(command.equals("Add Topping")){
+         order.add(jcb.getSelectedItem().toString());      
+         jt1.append(jcb.getSelectedItem().toString() + "\n");   
+      }
+      else if(command.equals("Order")){
+         //convert Arraylist to String array
+         // declaration and initialise String Array 
+         String str_order[] = new String[order.size()]; 
+  
+         // ArrayList to Array Conversion 
+         for (int j = 0; j < order.size(); j++) { 
+            // Assign each value to String array 
+            str_order[j] = order.get(j); 
+         }
+        
+         //Sumbit order, quantity and size
+         //to do: create GUI for quantity and size selection   
+         cake.orderCake(str_order, 1, 2);
+         String txt = cake.printOrder_GUI();
+         jt1.append(txt);
+      }    
+   }
+       
+   public void updateCB(String[] topping){
+      for(int i=0; i<topping.length; i++){
+         jcb.addItem(topping[i]);
+      }      
+   }
+
+   public static void main (String[] args) {
+      cake = new BlackForest("BlackForest");
+      order = new ArrayList<String>();
+      
+      JFrame frame = new JFrame ("Cake Order");
+      String[] topping = {"Chocolate", "Cherries", "Whipped Cream"};
+      cake.setCake(topping, 45.00, 65.00, 80.00); 
+      
+      CakeApp_Lab6 capp = new CakeApp_Lab6(); 
+      capp.updateCB(topping);
+      
+      frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+      frame.getContentPane().add (capp);
+      frame.pack();
+      frame.setVisible (true);
+}
+}
